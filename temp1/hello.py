@@ -8,6 +8,5 @@ Date : 2016-07-13
 print("Hello world")
 print("Hello world")
 print("Hello world")
-print("Hello world")
-print("Hello world")
+
 
