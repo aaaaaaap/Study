@@ -1,24 +1,20 @@
+// gpgp20200@gmail.com
+
+//  Keyworkd Count
 
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// jsonp 諛⑹떇�쇰줈 �쒕쾭�� �몄텧
-//
-// param string �ㅼ썙��
-// param string 肄쒕갚硫붿뒪��
-////////////////////////////////////////////////////////////////////////////////////////////////////
-function _ryo_get_keyword_count(ps_keyword, ps_callback, ps_position)
+async function _ryo_get_keyword_count(ps_keyword, ps_callback, ps_position)
 {
-	//alert(ps_keyword);
-	if ( ! ps_keyword )
+	if ( !ps_keyword )
 	{
-		alert('寃��됱뼱媛� 鍮꾩뿀�듬땲��');
+		alert('Keyworkd가 없다');
 		return false;
 	}
 
 
-	var s_keyword = encodeURIComponent(ps_keyword.toUpperCase().replace(/ /g,'')); // 怨듬갚�쒓굅�섍퀬, �곷떒�댁씪寃쎌슦�뚮Ц�먮뒗��臾몄옄濡쒕컮袁멸퀬(�덇렇�쇨��됱삤瑜섎궓),�몄퐫�⑷퉴吏�..
-	var j = document.createElement('script');
+	var s_keyword = encodeURIComponent(ps_keyword.toUpperCase().replace(/ /g, '')); // ps_keyword를 공백을 제거하고 UTF-8로 인코딩
+	var j = document.createElement('script');		// 지정한 tagName (sctipt)의 HTML 요소를 만들어 반환
 
 	
 	var u = 'https://www.ryo.co.kr/naver/keyword?position=' + ps_position + '&callback=' + ps_callback + '&dn=&keyword=' + s_keyword;
@@ -27,7 +23,7 @@ function _ryo_get_keyword_count(ps_keyword, ps_callback, ps_position)
 	j.setAttribute('type', 'text/javascript');
 	document.getElementsByTagName('body')[0].appendChild(j);
 
-	sleep(200);
+	await sleep(200);			// 비동기 슬립
 
 	return false;
 }
@@ -38,22 +34,7 @@ function sleep(delay) {
 }
 
 
-
-function _ryo_dn2encode(param) {
-	var r='';
-	for ( var i=0; i<param.length; i++) {
-		r+=param.charCodeAt(i);
-		if (i<param.length-1) r+=',';
-	}
-	return encodeURIComponent(r);
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// 遺곷쭏�대┸�� �대┃�덉쓣 �� 理쒖큹 �ㅽ뻾�섎뒗 吏��먯엫
-// �꾩옱 寃��됱뼱 議고쉶�� �뺤씤 / 異쒕젰
-////////////////////////////////////////////////////////////////////////////////////////////////////
-if ( ! document.getElementById('o_div_keycnt') ) // �대� 議고쉶�� 寃곌낵媛� 異쒕젰�섏뼱 �덉쑝硫� �ㅼ떆 議고쉶�섏� �딆쓬
+if ( ! document.getElementById('o_div_keycnt') )
 {
 	var s_naver_search_keyword = document.getElementById('nx_query').value; // 寃��됲뤌�� �곹엺 寃��됱뼱
 	_ryo_get_keyword_count(s_naver_search_keyword, 'set_keyword_cnt', 'main');
@@ -64,7 +45,6 @@ if ( ! document.getElementById('o_div_keycnt') ) // �대� 議고쉶�� �
 function set_keyword_cnt(po_json)
 {
 	_set_keyword_cnt_core(po_json);
-
 	get_relate_keyword_cnt()
 }
 
@@ -76,20 +56,10 @@ function _set_keyword_cnt_core(po_json)
 	o_div_keycnt.id="o_div_keycnt";
 	o_div_keycnt.innerHTML='<div id="keyword_cnt" style="display: inline-block; text-align: right; padding-bottom: 10px; font-weight: bold; color: blue;">' + po_json.relKeyword + ' &nbsp pc:' + po_json.monthlyPcQcCnt + ' &nbsp; m:' + po_json.monthlyMobileQcCnt + '</div>';
 
-	// 議고쉶�� �붾㈃�� 異쒕젰
-	//var o_div = document.getElementsByClassName('search_area')[0]; // 異쒕젰吏��� 吏���
-	//o_div.appendChild(o_div_keycnt); // 異쒕젰
 	document.querySelector('.lst_related_srch').prepend(o_div_keycnt);
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// �곌�寃��됱뼱 議고쉶�� 異쒕젰
-////////////////////////////////////////////////////////////////////////////////////////////////////
-//var relate_keyword_index = 0;
 
-
-
-// �꾩옱 寃��됱뼱 議고쉶�� 異쒕젰�� �ㅽ뻾�� �몃━嫄�
 function get_relate_keyword_cnt()
 {
 	//li_2_table();
@@ -166,49 +136,3 @@ function _mv_top_related_keword_wrapper()
 	e_main.prepend(e_wrapper);
 }
 
-
-/*
-function _get_relate_keyword_old()
-{
-
-	var a_dd = document.getElementsByClassName('lst_relate')[0];
-
-	if ( a_dd ) {
-		var a_keyword = a_dd.getElementsByTagName('a');
-		var s_keyword = '';
-		var a_total_keyword = new Array();
-
-		for ( var i in a_keyword ) {
-			if ( a_keyword[i].innerText ) {
-				s_keyword = a_keyword[i].innerText.replace(/ /g,'');
-				a_total_keyword.push(s_keyword);
-			}
-		}
-
-		return a_total_keyword;
-	}
-
-	return false;
-}
-
-function li_2_table()
-{
-	var a_dd = document.getElementsByClassName('lst_relate')[0];
-	var a_li = a_dd.getElementsByTagName('li');
-
-	var s_table = '<div style="padding-top: 20px;"><table class="table_relate_keyword" style="margin-top: 20px;">';
-	for ( var i in a_li ) {
-		//alert(a_li[i].innerHTML);
-
-		if ( a_li[i].innerHTML ) // 留� �앸�遺꾩뿏 媛믪씠 鍮� li媛� �덉쓣 �� �덉뼱��, �� 議곌굔�� �ｌ� �딆쑝硫� td�덉뿉 undefine�대� 湲��먭� 異쒕젰�쒕떎
-		{
-			s_table += '<tr>';
-			s_table += '<td class="relate_keyword_wrapper">' + a_li[i].innerHTML + '</td>';
-			s_table += '</tr>';
-		}
-	}
-	s_table += '</table></div>';
-
-	//a_dd.innerHTML += s_table;
-}
-*/
