@@ -3,6 +3,11 @@
 //  Keyworkd Count
 
 
+if (!document.getElementById('el_naver_keycount')) {
+	var el_naver_search_keyword = document.getElementById('nx_query').value;			// 검색 단어 얻기
+	_ryo_get_keyword_count(el_naver_search_keyword, 'set_keyword_cnt', 'main');
+}
+
 
 async function _ryo_get_keyword_count(ps_keyword, ps_callback, ps_position)
 {
@@ -34,11 +39,6 @@ function sleep(delay) {
 }
 
 
-if ( ! document.getElementById('o_div_keycnt') )
-{
-	var s_naver_search_keyword = document.getElementById('nx_query').value; // 寃��됲뤌�� �곹엺 寃��됱뼱
-	_ryo_get_keyword_count(s_naver_search_keyword, 'set_keyword_cnt', 'main');
-}
 
 
 // jsonp 肄쒕갚
@@ -51,12 +51,11 @@ function set_keyword_cnt(po_json)
 // �꾩옱 寃��됱뼱 議고쉶�� 異쒕젰
 function _set_keyword_cnt_core(po_json)
 {
-	// 議고쉶��
-	var o_div_keycnt = document.createElement('div');
-	o_div_keycnt.id="o_div_keycnt";
-	o_div_keycnt.innerHTML='<div id="keyword_cnt" style="display: inline-block; text-align: right; padding-bottom: 10px; font-weight: bold; color: blue;">' + po_json.relKeyword + ' &nbsp pc:' + po_json.monthlyPcQcCnt + ' &nbsp; m:' + po_json.monthlyMobileQcCnt + '</div>';
+	var el_naver_keycount = document.createElement('div');
+	el_naver_keycount.id ="el_naver_keycount";
+	el_naver_keycount.innerHTML='<div id="keyword_cnt" style="display: inline-block; text-align: right; padding-bottom: 10px; font-weight: bold; color: blue;">' + po_json.relKeyword + ' &nbsp pc:' + po_json.monthlyPcQcCnt + ' &nbsp; m:' + po_json.monthlyMobileQcCnt + '</div>';
 
-	document.querySelector('.lst_related_srch').prepend(o_div_keycnt);
+	document.querySelector('.lst_related_srch').prepend(el_naver_keycount);
 }
 
 
@@ -135,4 +134,5 @@ function _mv_top_related_keword_wrapper()
 
 	e_main.prepend(e_wrapper);
 }
+
 
